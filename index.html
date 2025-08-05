@@ -235,7 +235,6 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* --- CSS MỚI CHO POP-UP --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -243,14 +242,14 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            display: none; /* Ẩn mặc định */
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
         }
 
         .modal-overlay.active {
-            display: flex; /* Hiện khi có class active */
+            display: flex;
         }
 
         .modal-content {
@@ -287,9 +286,11 @@
 
         .modal-body {
             line-height: 1.7;
+            white-space: pre-wrap; /* SỬA LỖI: Giữ định dạng xuống dòng trong pop-up */
         }
 
         .view-details-btn {
+            display: block; /* SỬA LỖI: Hiển thị nút trên một dòng riêng */
             background-color: var(--accent-color);
             color: white;
             border: none;
@@ -303,7 +304,6 @@
         .view-details-btn:hover {
             opacity: 0.9;
         }
-        /* --- KẾT THÚC CSS MỚI --- */
 
     </style>
 </head>
@@ -363,7 +363,6 @@
         </footer>
     </div>
     
-    <!-- --- HTML MỚI CHO POP-UP --- -->
     <div id="detailModal" class="modal-overlay">
         <div class="modal-content">
             <button id="modalCloseButton" class="modal-close">&times;</button>
@@ -373,7 +372,6 @@
             </div>
         </div>
     </div>
-    <!-- --- KẾT THÚC HTML MỚI --- -->
 
 
     <script type="module">
@@ -416,7 +414,6 @@
         const ghiChuItem = document.getElementById('ghiChuItem');
         const micButton = document.getElementById('micButton');
 
-        // --- LẤY ELEMENT CỦA POP-UP (MỚI) ---
         const detailModal = document.getElementById('detailModal');
         const modalCloseButton = document.getElementById('modalCloseButton');
         const modalBody = document.getElementById('modalBody');
@@ -525,40 +522,26 @@
             return htmlResult;
         }
 
-        // --- HÀM formatThongTinChung ĐƯỢC CẬP NHẬT (MỚI) ---
-        function formatThongTinChung(text) {
-            if (!text || !text.trim()) return '';
-            
-            // Tạo bản sao để xử lý hiển thị, loại bỏ dòng (Xem chi tiết)
-            let displayText = text.replace(/\(Xem chi tiết\)/gi, '').trim();
-
-            let lines = displayText.split('\n').filter(line => line.trim() !== '');
-            let htmlResult = '';
-            
-            lines.forEach((line, index) => {
-                let trimmedLine = line.trim();
-                if (index === 0) { // Dòng đầu tiên (Tên tỉnh)
-                     htmlResult += '<strong>' + trimmedLine + '</strong><br>';
-                } else if (trimmedLine.startsWith('(') && trimmedLine.endsWith(')')) { // Dòng (tỉnh sáp nhập)
-                     htmlResult += '<strong>' + trimmedLine + '</strong><br>';
-                } else {
-                     htmlResult += trimmedLine + '<br>';
-                }
-            });
-
-            // Nếu trong text gốc có "(Xem chi tiết)", thì thêm nút bấm
-            if (text.toLowerCase().includes('(xem chi tiết)')) {
-                htmlResult += `<button class="view-details-btn">Xem chi tiết</button>`;
-            }
-
-            return htmlResult;
+        // SỬA LỖI: Hàm này chỉ format text để hiển thị, không chứa logic tạo nút.
+        function formatDisplayThongTinChung(text) {
+            if (!text) return '';
+            // Loại bỏ dòng (Xem chi tiết) khỏi nội dung hiển thị chính.
+            const displayText = text.replace(/\(Xem chi tiết\)/gi, '').trim();
+            // Format các dòng còn lại với thẻ HTML
+            return displayText.split('\n')
+                .filter(line => line.trim() !== '')
+                .map((line, index) => {
+                    let trimmedLine = line.trim();
+                    if (index === 0 || (trimmedLine.startsWith('(') && trimmedLine.endsWith(')'))) {
+                        return `<strong>${trimmedLine}</strong>`;
+                    }
+                    return trimmedLine;
+                }).join('<br>');
         }
 
-        // --- CÁC HÀM XỬ LÝ POP-UP (MỚI) ---
         function openModal(content) {
-            // Thay thế ký tự xuống dòng bằng thẻ <br> để hiển thị đúng trên HTML
-            // Đồng thời loại bỏ chữ (Xem chi tiết) khỏi nội dung pop-up
-            modalBody.innerHTML = content.replace(/\(Xem chi tiết\)/gi, '').replace(/\n/g, '<br>');
+            // Nội dung cho pop-up là nội dung gốc, không bỏ dòng nào.
+            modalBody.textContent = content;
             detailModal.classList.add('active');
         }
 
@@ -566,10 +549,8 @@
             detailModal.classList.remove('active');
         }
         
-        // Thêm sự kiện để đóng pop-up
         modalCloseButton.addEventListener('click', closeModal);
         detailModal.addEventListener('click', (event) => {
-            // Nếu click vào lớp nền (overlay) thì cũng đóng pop-up
             if (event.target === detailModal) {
                 closeModal();
             }
@@ -603,11 +584,32 @@
                         tenHienThi = 'Tỉnh ' + tenHienThi;
                     }
                     resultTenTinh.textContent = tenHienThi;
+
+                    // SỬA LỖI: Xử lý hiển thị thông tin chung và nút chi tiết
+                    resultThongTinChung.innerHTML = formatDisplayThongTinChung(found.thongTinChung);
+
+                    // Xóa nút cũ đi (quan trọng!) để tránh bị lặp lại khi tìm kiếm nhiều lần
+                    const oldButton = infoChungItem.querySelector('.view-details-btn');
+                    if (oldButton) {
+                        oldButton.remove();
+                    }
                     
-                    // --- ĐOẠN NÀY ĐƯỢC SỬA ĐỂ GỌI HÀM formatThongTinChung ĐÃ CẬP NHẬT ---
-                    resultThongTinChung.innerHTML = formatThongTinChung(found.thongTinChung);
+                    // LOGIC MỚI: Kiểm tra dữ liệu gốc và tạo nút nếu cần
+                    if (found.thongTinChung && found.thongTinChung.toLowerCase().includes('(xem chi tiết)')) {
+                        const detailButton = document.createElement('button');
+                        detailButton.className = 'view-details-btn';
+                        detailButton.textContent = 'Xem chi tiết';
+                        
+                        detailButton.addEventListener('click', () => {
+                            // Khi click, mở pop-up với toàn bộ nội dung gốc
+                            openModal(found.thongTinChung);
+                        });
+                        
+                        // Thêm nút vào cuối của mục thông tin chung
+                        resultThongTinChung.appendChild(detailButton);
+                    }
                     
-                    resultTrungTamHC.innerHTML = found.trungTamHanhChinh ? found.trumgTamHanhChinh : '<p class="no-info">Chưa có thông tin</p>';
+                    resultTrungTamHC.innerHTML = found.trungTamHanhChinh ? found.trungTamHanhChinh : '<p class="no-info">Chưa có thông tin</p>';
                     resultLanhDaoTinh.innerHTML = formatLanhDaoTinh(found.lanhDaoTinh);
                     resultLanhDaoSo.innerHTML = formatLanhDaoSo(found.lanhDaoSo, found.chucVu);
                     resultDauMoi.innerHTML = formatMultiLine(found.dauMoi, '📧');
@@ -619,15 +621,6 @@
                     if (found.ghiChu) { ghiChuItem.classList.remove('hidden'); } else { ghiChuItem.classList.add('hidden'); }
                     resultsContainer.classList.remove('hidden');
                     
-                    // --- THÊM SỰ KIỆN CLICK CHO NÚT "XEM CHI TIẾT" (MỚI) ---
-                    const detailButton = resultsContainer.querySelector('.view-details-btn');
-                    if (detailButton) {
-                        detailButton.addEventListener('click', () => {
-                            // "found.thongTinChung" chứa toàn bộ nội dung gốc để đưa vào pop-up
-                            openModal(found.thongTinChung);
-                        });
-                    }
-
                 } else {
                     resultsContainer.classList.add('hidden');
                     setUIState(false, 'Không tìm thấy thông tin cho "' + provinceInput.value + '". Vui lòng kiểm tra lại.', true);
