@@ -286,11 +286,11 @@
 
         .modal-body {
             line-height: 1.7;
-            white-space: pre-wrap; /* SỬA LỖI: Giữ định dạng xuống dòng trong pop-up */
+            white-space: pre-wrap;
         }
 
         .view-details-btn {
-            display: block; /* SỬA LỖI: Hiển thị nút trên một dòng riêng */
+            display: block;
             background-color: var(--accent-color);
             color: white;
             border: none;
@@ -522,25 +522,7 @@
             return htmlResult;
         }
 
-        // SỬA LỖI: Hàm này chỉ format text để hiển thị, không chứa logic tạo nút.
-        function formatDisplayThongTinChung(text) {
-            if (!text) return '';
-            // Loại bỏ dòng (Xem chi tiết) khỏi nội dung hiển thị chính.
-            const displayText = text.replace(/\(Xem chi tiết\)/gi, '').trim();
-            // Format các dòng còn lại với thẻ HTML
-            return displayText.split('\n')
-                .filter(line => line.trim() !== '')
-                .map((line, index) => {
-                    let trimmedLine = line.trim();
-                    if (index === 0 || (trimmedLine.startsWith('(') && trimmedLine.endsWith(')'))) {
-                        return `<strong>${trimmedLine}</strong>`;
-                    }
-                    return trimmedLine;
-                }).join('<br>');
-        }
-
         function openModal(content) {
-            // Nội dung cho pop-up là nội dung gốc, không bỏ dòng nào.
             modalBody.textContent = content;
             detailModal.classList.add('active');
         }
@@ -585,29 +567,42 @@
                     }
                     resultTenTinh.textContent = tenHienThi;
 
-                    // SỬA LỖI: Xử lý hiển thị thông tin chung và nút chi tiết
-                    resultThongTinChung.innerHTML = formatDisplayThongTinChung(found.thongTinChung);
+                    // --- SỬA LỖI TRIỆT ĐỂ: LOGIC XỬ LÝ NÚT "XEM CHI TIẾT" ---
+                    if (found.thongTinChung) {
+                        // 1. Dùng normalizeText để kiểm tra một cách đáng tin cậy.
+                        const hasDetails = normalizeText(found.thongTinChung).includes('(xem chi tiet)');
 
-                    // Xóa nút cũ đi (quan trọng!) để tránh bị lặp lại khi tìm kiếm nhiều lần
-                    const oldButton = infoChungItem.querySelector('.view-details-btn');
-                    if (oldButton) {
-                        oldButton.remove();
-                    }
-                    
-                    // LOGIC MỚI: Kiểm tra dữ liệu gốc và tạo nút nếu cần
-                    if (found.thongTinChung && found.thongTinChung.toLowerCase().includes('(xem chi tiết)')) {
-                        const detailButton = document.createElement('button');
-                        detailButton.className = 'view-details-btn';
-                        detailButton.textContent = 'Xem chi tiết';
+                        // 2. Chuẩn bị nội dung sẽ hiển thị trên trang chính (luôn bỏ dòng "Xem chi tiết").
+                        const displayText = found.thongTinChung.replace(/\(Xem chi tiết\)/gi, '').trim();
                         
-                        detailButton.addEventListener('click', () => {
-                            // Khi click, mở pop-up với toàn bộ nội dung gốc
-                            openModal(found.thongTinChung);
-                        });
-                        
-                        // Thêm nút vào cuối của mục thông tin chung
-                        resultThongTinChung.appendChild(detailButton);
+                        // 3. Format nội dung hiển thị này thành HTML.
+                        resultThongTinChung.innerHTML = displayText.split('\n')
+                            .filter(line => line.trim() !== '')
+                            .map((line, index) => {
+                                let trimmedLine = line.trim();
+                                if (index === 0 || (trimmedLine.startsWith('(') && trimmedLine.endsWith(')'))) {
+                                    return `<strong>${trimmedLine}</strong>`;
+                                }
+                                return trimmedLine;
+                            }).join('<br>');
+
+                        // 4. Nếu có chi tiết, TẠO MỚI và GẮN nút vào.
+                        if (hasDetails) {
+                            const detailButton = document.createElement('button');
+                            detailButton.className = 'view-details-btn';
+                            detailButton.textContent = 'Xem chi tiết';
+                            
+                            // Gắn sự kiện click để mở pop-up với nội dung GỐC, ĐẦY ĐỦ.
+                            detailButton.onclick = () => openModal(found.thongTinChung);
+                            
+                            // Thêm nút vào cuối thẻ div chứa thông tin chung.
+                            resultThongTinChung.appendChild(detailButton);
+                        }
+                    } else {
+                        // Nếu không có thông tin chung, dọn dẹp thẻ div.
+                        resultThongTinChung.innerHTML = '';
                     }
+                    // --- KẾT THÚC KHỐI SỬA LỖI ---
                     
                     resultTrungTamHC.innerHTML = found.trungTamHanhChinh ? found.trungTamHanhChinh : '<p class="no-info">Chưa có thông tin</p>';
                     resultLanhDaoTinh.innerHTML = formatLanhDaoTinh(found.lanhDaoTinh);
@@ -615,6 +610,7 @@
                     resultDauMoi.innerHTML = formatMultiLine(found.dauMoi, '📧');
                     resultGhiChu.innerHTML = found.ghiChu ? found.ghiChu : '<p class="no-info">Không có ghi chú</p>';
 
+                    // Hiển thị/ẩn các mục kết quả
                     if (found.thongTinChung) { infoChungItem.classList.remove('hidden'); } else { infoChungItem.classList.add('hidden'); }
                     if (found.trungTamHanhChinh) { trungTamHCItem.classList.remove('hidden'); } else { trungTamHCItem.classList.add('hidden'); }
                     if (found.lanhDaoTinh) { lanhDaoTinhItem.classList.remove('hidden'); } else { lanhDaoTinhItem.classList.add('hidden'); }
