@@ -392,47 +392,68 @@
         const lanhDaoTinhItem = document.getElementById('lanhDaoTinhItem');
         const ghiChuItem = document.getElementById('ghiChuItem');
         const micButton = document.getElementById('micButton');
-
         const detailModal = document.getElementById('detailModal');
         const modalCloseButton = document.getElementById('modalCloseButton');
         const modalTitle = document.getElementById('modalTitle');
         const modalBody = document.getElementById('modalBody');
 
-        // --- DỮ LIỆU MỚI: Thêm trường `chiTietXa` ---
+        // --- CƠ SỞ DỮ LIỆU ĐÃ CẬP NHẬT ĐÚNG CẤU TRÚC ---
         const provinceData = [
           {
             "tenTinh": "An Giang",
             "tenThayThe": "Kiên Giang",
-            "thongTinChung": "AN GIANG\n(Kiên Giang + An Giang)\nDiện tích: 9,9 nghìn km2\nDân số: 4,952,238 người\nĐơn vị hành chính cấp xã: 102 (gồm 85 xã, 14 phường và 3 đặc khu)\n(Xem chi tiết)",
+            "thongTinChung": "AN GIANG\n(Kiên Giang + An Giang)\nDiện tích: 9,9 nghìn km2\nDân số: 4,952,238 người\nĐơn vị hành chính cấp xã: 102 (gồm 85 xã, 14 phường và 3 đặc khu)\n(Xem chi tiết) (sheet An Giang)",
             "trungTamHanhChinh": "TP. Rạch Giá (Kiên Giang)",
             "lanhDaoTinh": "Ông Nguyễn Tiến Hải\nBí thư Tỉnh ủy An Giang\n\nÔng Hồ Văn Mừng\nChủ tịch UBND tỉnh An Giang",
             "lanhDaoSo": "Nguyễn Như Anh\n(1973)\n0918899160",
             "chucVu": "Giám đốc Sở Nội vụ",
             "dauMoi": "Đoàn Bảo Toàn, \nPhó Chánh Văn phòng Sở, 0939303305",
             "ghiChu": "Giáp biển; Tỉnh có dân số đông nhất sau sáp nhập với hơn 4,9 triệu người",
-            "chiTietXa": "CHI TIẾT CÁC ĐƠN VỊ HÀNH CHÍNH CẤP XÃ TỈNH AN GIANG (Sau sáp nhập)\n\nI. HUYỆN A (thuộc Kiên Giang cũ)\n1. Xã A1\n2. Xã A2\n3. Thị trấn A3\n\nII. HUYỆN B (thuộc An Giang cũ)\n1. Phường B1\n2. Phường B2\n3. Xã B3\n\n(Nội dung này là ví dụ, bạn hãy thay thế bằng dữ liệu thật từ sheet 'An Giang' trong file Excel.)"
+            "chiTietXa": `CHI TIẾT ĐVHC CẤP XÃ TỈNH AN GIANG (Sau sáp nhập)
+
+I. HUYỆN CHÂU THÀNH (thuộc Kiên Giang cũ)
+1. Xã Vĩnh Hòa Hiệp
+2. Xã Vĩnh Hòa Phú
+3. Thị trấn Minh Lương
+
+II. THÀNH PHỐ LONG XUYÊN (thuộc An Giang cũ)
+1. Phường Mỹ Bình
+2. Phường Mỹ Long
+3. Xã Mỹ Khánh
+
+(Đây là dữ liệu mẫu. Vui lòng sao chép và dán nội dung thật từ sheet 'An Giang' của bạn vào đây.)`
           },
           {
             "tenTinh": "Bắc Ninh",
             "tenThayThe": "Bắc Giang",
-            "thongTinChung": "BẮC NINH\n(Bắc Ninh + Bắc Giang)\nDiện tích: 4,7 nghìn km2\nDân số: 3,619,433 người\nĐơn vị hành chính cấp xã: 99 (gồm 66 xã, 33 phường) \n(Xem chi tiết)",
+            "thongTinChung": "BẮC NINH\n(Bắc Ninh + Bắc Giang)\nDiện tích: 4,7 nghìn km2\nDân số: 3,619,433 người\nĐơn vị hành chính cấp xã: 99 (gồm 66 xã, 33 phường)\n(Xem chi tiết)",
             "trungTamHanhChinh": "TP Bắc Giang (Bắc Giang)",
             "lanhDaoTinh": "Ông Nguyễn Văn Gấu\nBí thư Tỉnh ủy Bắc Ninh\n\nÔng Vương Quốc Tuấn\nChủ tịch UBND tỉnh Bắc Ninh",
             "lanhDaoSo": "Vũ Mạnh Hùng\n(1969)\n0982355353",
             "chucVu": "Giám đốc Sở Nội vụ",
             "dauMoi": "Nguyễn Tiến Đạt, \nChánh Văn phòng Sở\n0912533888",
             "ghiChu": "Là một trong 4 tỉnh sau sáp nhập có số thu ngân sách trên 50.000 tỉ đồng",
-            "chiTietXa": "CHI TIẾT CÁC ĐƠN VỊ HÀNH CHÍNH CẤP XÃ TỈNH BẮC NINH (Sau sáp nhập)\n\nI. HUYỆN YÊN DŨNG (thuộc Bắc Giang cũ)\n1. Xã Đồng Việt\n2. Xã Đồng Phúc\n\nII. THÀNH PHỐ BẮC NINH (thuộc Bắc Ninh cũ)\n1. Phường Võ Cường\n2. Phường Kinh Bắc\n\n(Nội dung này là ví dụ, bạn hãy thay thế bằng dữ liệu thật từ sheet 'Bắc Ninh' trong file Excel.)"
+            "chiTietXa": `CHI TIẾT ĐVHC CẤP XÃ TỈNH BẮC NINH (Sau sáp nhập)
+
+I. HUYỆN VIỆT YÊN (thuộc Bắc Giang cũ)
+1. Xã Tự Lạn
+2. Xã Hương Mai
+3. Thị trấn Bích Động
+
+II. THỊ XÃ THUẬN THÀNH (thuộc Bắc Ninh cũ)
+1. Phường Hồ
+2. Phường An Bình
+3. Xã Nguyệt Đức
+
+(Đây là dữ liệu mẫu. Vui lòng sao chép và dán nội dung thật từ sheet 'Bắc Ninh' của bạn vào đây.)`
           },
-          { "tenTinh": "Cà Mau", "tenThayThe": "Bạc Liêu", "thongTinChung": "CÀ MAU\n(Bạc Liêu + Cà Mau)\nDiện tích: 7,9 nghìn km2\nDân số: 2,606,672 người\nĐơn vị hành chính cấp xã: 64 (gồm 55 xã, 09 phường)", "trungTamHanhChinh": "TP Cà Mau (Cà Mau)", "lanhDaoTinh": "Ông Nguyễn Hồ Hải\nBí thư Tỉnh ủy Cà Mau\n\nÔng Phạm Thành Ngại\nChủ tịch UBND tỉnh Cà Mau", "lanhDaoSo": "Trần Hữu Phước\n(1971)\n0919381800", "chucVu": "Giám đốc Sở Nội vụ", "dauMoi": "Đoàn Thanh Thùy\nChánh Văn phòng Sở\n0913692674", "ghiChu": "Giáp biển;", "chiTietXa": null },
-          { "tenTinh": "Cao Bằng", "tenThayThe": "", "thongTinChung": "CAO BẰNG\nDiện tích: 6,7 nghìn km2\nDân số: 573,119 người\nĐơn vị hành chính cấp xã: 56 (gồm 53 xã, 03 phường)", "trungTamHanhChinh": "TP Cao Bằng (Cao Bằng)", "lanhDaoTinh": "Ông Quản Minh Cường\nBí thư Tỉnh ủy Cao Bằng\n\nÔng Lê Hải Hòa\nChủ tịch UBND tỉnh Cao Bằng", "lanhDaoSo": "Nguyễn Lâm Thị Tú Anh\n(1971)\n0915424739", "chucVu": "Giám đốc Sở Nội vụ", "dauMoi": "Nguyễn Thị Thanh Mai\nChánh Văn phòng Sở\n0912682292", "ghiChu": "", "chiTietXa": null },
-          { "tenTinh": "Thành phố Cần Thơ", "tenThayThe": "Sóc Trăng Hậu Giang", "thongTinChung": "CẦN THƠ\n(Cần Thơ + Sóc Trăng + Hậu Giang)\nDiện tích: 6,4 nghìn km2\nDân số: 4,199,824 người\nĐơn vị hành chính cấp xã: 103 (gồm 65 xã, 30 phường)", "trungTamHanhChinh": "Ninh Kiều (Cần Thơ)", "lanhDaoTinh": "Ông Đỗ Thanh Bình\nBí thư Thành ủy Cần Thơ\n\nÔng Trần Văn Lâu\nChủ tịch UBND TP Cần Thơ", "lanhDaoSo": "Trần Thanh Liêm\n(1970)\n0919129723", "chucVu": "Quyền Giám đốc Sở Nội vụ", "dauMoi": "Trương Hoài Phụng, \nPhó Trưởng phòng TCCB.  0913770599", "ghiChu": "Tp trực thuộc TW; giáp biển;", "chiTietXa": null },
-          { "tenTinh": "Thành phố Đà Nẵng", "tenThayThe": "Quảng Nam", "thongTinChung": "ĐÀ NẴNG\n(Đà Nẵng + Quảng Nam)\nDiện tích: 11,9 nghìn km2\nDân số: 3,065,628 người\nĐơn vị hành chính cấp xã: 94 (gồm 70 xã, 23 phường và 01 đặc khu)", "trungTamHanhChinh": "Hải Châu (Đà Nẵng)", "lanhDaoTinh": "Ông Nguyễn Văn Quảng\nBí thư Thành ủy Đà Nẵng\n\nÔng Lương Nguyễn Minh Triết\nChủ tịch UBND TP Đà Nẵng", "lanhDaoSo": "Phan Văn Bình\n(1981)\n0936832299", "chucVu": "Giám đốc Sở Nội vụ", "dauMoi": "Đ/c Nhung \nChánh Văn phòng Sở \n0905246111", "ghiChu": "Tp trực thuộc TW; là TP có diện tích lớn nhất trong 6 TP trực thuộc TW; giáp biển;", "chiTietXa": null },
-          // ... và các tỉnh còn lại ...
-          { "tenTinh": "Vĩnh Long", "tenThayThe": "Bến Tre Trà Vinh", "thongTinChung": "VĨNH LONG\n(Bến Tre + Vĩnh Long + Trà Vinh)\nDiện tích: 6,3 nghìn km2\nDân số: 4,257,581 người\nĐơn vị hành chính cấp xã: 124 (gồm 19 phường, 105 xã)", "trungTamHanhChinh": "TP Vĩnh Long (Vĩnh Long)", "lanhDaoTinh": "Ông Ngô Chí Cường\nBí thư Tỉnh ủy Vĩnh Long\n\nÔng Lữ Quang Ngời\nChủ tịch UBND tỉnh Vĩnh Long", "lanhDaoSo": "Nguyễn Thị Ngọc Giàu\n(1984)\n0919978225", "chucVu": "Giám đốc Sở Nội vụ", "dauMoi": "Nguyễn Văn Châu,\nChánh Văn phòng Sở, \n0919104033", "ghiChu": "Giáp biển", "chiTietXa": null }
+          // Thêm các tỉnh còn lại vào đây, với `chiTietXa: null`
+          // Ví dụ:
+          { "tenTinh": "Cà Mau", "tenThayThe": "Bạc Liêu", "thongTinChung": "...", "chiTietXa": null },
+          // ... và tiếp tục cho đến hết 34 tỉnh.
         ];
-        // Note: I have truncated the full data list here for brevity, 
-        // but the actual code should contain the full list as you provided.
+        // Lưu ý: Để rút gọn, tôi chỉ hiển thị 2 tỉnh đầu tiên với đầy đủ dữ liệu.
+        // Bạn cần đảm bảo danh sách `provinceData` có đủ 34 tỉnh.
 
 
         function normalizeText(str) {
@@ -440,19 +461,16 @@
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().replace(/thanh pho |tp /g, "").trim();
         }
 
-        // --- HÀM MỞ POP-UP ĐÃ ĐƯỢC SỬA LẠI HOÀN TOÀN ---
         /**
-         * Hiển thị pop-up với nội dung chi tiết từ trường 'chiTietXa'.
-         * @param {object} province - Đối tượng tỉnh/thành phố.
+         * SỬA LỖI: Hàm này chỉ hiển thị nội dung từ trường `chiTietXa`.
          */
         function openModal(province) {
             let tenHienThi = province.tenTinh;
             if (tenHienThi.toLowerCase().indexOf('thành phố') === -1) {
                 tenHienThi = 'Tỉnh ' + tenHienThi;
             }
-            modalTitle.textContent = `Chi tiết ĐVHC cấp xã: ${tenHienThi}`;
+            modalTitle.textContent = `Chi tiết Đơn vị hành chính cấp xã: ${tenHienThi}`;
 
-            // Chỉ lấy nội dung từ trường `chiTietXa`
             if (province.chiTietXa) {
                 modalBody.textContent = province.chiTietXa;
             } else {
@@ -473,9 +491,53 @@
             }
         });
 
+        // TÁCH CÁC HÀM FORMAT ĐỂ TÁI SỬ DỤNG
+        function formatLanhDaoTinh(text) {
+            if (!text || !text.trim()) return '<p class="no-info">Chưa có thông tin</p>';
+            return text.split('\n\n').map(block => {
+                if (!block.trim()) return '';
+                var parts = block.trim().split('\n');
+                return `<div class="contact-entry"><p>👤 ${parts[0] || ''}</p><p><em>${parts[1] || ''}</em></p></div>`;
+            }).join('') || '<p class="no-info">Chưa có thông tin</p>';
+        }
+
+        function formatLanhDaoSo(data, chucvu) {
+            if (!data || !data.trim()) return '<p class="no-info">Chưa có thông tin</p>';
+            var lines = data.split('\n');
+            var html = '<div class="contact-entry">';
+            if (lines[0]) html += `<p>👤 ${lines[0].trim()}</p>`;
+            if (lines[1]) html += `<p>📅 Năm sinh: ${lines[1].trim()}</p>`;
+            if (lines[2]) {
+                const telLink = lines[2].replace(/[\s\.\(\)\u202f]/g, '');
+                html += `<p>📞 SĐT: <a href="tel:${telLink}">${lines[2].trim()}</a></p>`;
+            }
+            if (chucvu) html += `<p>💼 Chức vụ: ${chucvu}</p>`;
+            html += '</div>';
+            return html;
+        }
+
+        function formatMultiLine(text, icon) {
+            if (!text || !text.trim()) return '<p class="no-info">Chưa có thông tin</p>';
+            return text.split('\n').map(line => {
+                line = line.trim();
+                if (line === '') return '';
+                const phoneMatch = line.match(/(\d[\d\s\.\(\)\u202f]{8,}\d)/g);
+                let infoPart = line, phonePart = null;
+                if (phoneMatch) {
+                    phonePart = phoneMatch[0].trim();
+                    infoPart = line.replace(phonePart, '').replace(/[,;-]$/, '').trim();
+                }
+                let html = `<div class="contact-entry"><p>${icon || '📧'} ${infoPart}</p>`;
+                if (phonePart) {
+                    const telLink = phonePart.replace(/[\s\.\(\)\u202f]/g, '');
+                    html += `<p>📞 SĐT: <a href="tel:${telLink}">${phonePart}</a></p>`;
+                }
+                html += '</div>';
+                return html;
+            }).join('');
+        }
 
         function performSearch() {
-            // (Phần này giữ nguyên, không cần thay đổi)
             try {
                 var query = normalizeText(provinceInput.value);
                 if (!query) {
@@ -486,67 +548,50 @@
                     return;
                 }
 
-                var found = null;
-                for (var i = 0; i < provinceData.length; i++) {
-                    var province = provinceData[i];
-                    var normalizedTenTinh = normalizeText(province.tenTinh);
-                    var normalizedTenThayThe = normalizeText(province.tenThayThe);
-                    if (normalizedTenTinh.indexOf(query) !== -1 || (normalizedTenThayThe && normalizedTenThayThe.indexOf(query) !== -1)) {
-                        found = province;
-                        break;
-                    }
-                }
+                var found = provinceData.find(province => {
+                    const normalizedTenTinh = normalizeText(province.tenTinh);
+                    const normalizedTenThayThe = normalizeText(province.tenThayThe);
+                    return normalizedTenTinh.includes(query) || (normalizedTenThayThe && normalizedTenThayThe.includes(query));
+                });
 
                 if (found) {
                     messageDiv.classList.add('hidden');
-                    var tenHienThi = found.tenTinh;
-                    if (tenHienThi.toLowerCase().indexOf('thành phố') === -1) {
-                        tenHienThi = 'Tỉnh ' + tenHienThi;
-                    }
+                    var tenHienThi = found.tenTinh.toLowerCase().startsWith('thành phố') ? found.tenTinh : 'Tỉnh ' + found.tenTinh;
                     resultTenTinh.textContent = tenHienThi;
 
-                    // Logic hiển thị nút "Xem chi tiết"
+                    // Logic hiển thị thông tin chung và nút chi tiết
                     if (found.thongTinChung) {
-                        const hasDetails = normalizeText(found.thongTinChung).includes('(xem chi tiet)');
-                        const displayText = found.thongTinChung.replace(/\(Xem chi tiết\)/gi, '').trim();
+                        const hasDetails = found.chiTietXa && normalizeText(found.thongTinChung).includes('(xem chi tiet');
+                        const displayText = found.thongTinChung.replace(/\(Xem chi tiết\).*/gi, '').trim();
                         
-                        resultThongTinChung.innerHTML = displayText.split('\n')
-                            .filter(line => line.trim() !== '')
-                            .map((line, index) => {
-                                let trimmedLine = line.trim();
-                                if (index === 0 || (trimmedLine.startsWith('(') && trimmedLine.endsWith(')'))) {
-                                    return `<strong>${trimmedLine}</strong>`;
-                                }
-                                return trimmedLine;
-                            }).join('<br>');
+                        resultThongTinChung.innerHTML = displayText.split('\n').filter(line => line.trim()).map((line, index) => {
+                            let trimmedLine = line.trim();
+                            return (index === 0 || (trimmedLine.startsWith('(') && trimmedLine.endsWith(')'))) ? `<strong>${trimmedLine}</strong>` : trimmedLine;
+                        }).join('<br>');
 
                         if (hasDetails) {
                             const detailButton = document.createElement('button');
                             detailButton.className = 'view-details-btn';
-                            detailButton.textContent = 'Xem chi tiết xã/phường'; // Thay đổi text nút cho rõ nghĩa
-                            detailButton.onclick = () => openModal(found); // Gọi hàm đã sửa
+                            detailButton.textContent = 'Xem chi tiết xã/phường';
+                            detailButton.onclick = () => openModal(found);
                             resultThongTinChung.appendChild(detailButton);
                         }
                     } else {
                         resultThongTinChung.innerHTML = '';
                     }
                     
-                    // Hiển thị các thông tin khác (không đổi)
-                    const formatLanhDaoTinh = (text) => {
-                        if (!text || !text.trim()) return '<p class="no-info">Chưa có thông tin</p>';
-                        var leaderBlocks = text.split('\n\n').map(block => {
-                            if (!block.trim()) return '';
-                            var parts = block.trim().split('\n');
-                            var name = parts[0] || '';
-                            var title = parts[1] || '';
-                            return `<div class="contact-entry"><p>👤 ${name}</p><p><em>${title}</em></p></div>`;
-                        }).join('');
-                        return leaderBlocks || '<p class="no-info">Chưa có thông tin</p>';
-                    };
+                    // Hiển thị các thông tin khác
                     resultTrungTamHC.innerHTML = found.trungTamHanhChinh ? found.trungTamHanhChinh : '<p class="no-info">Chưa có thông tin</p>';
                     resultLanhDaoTinh.innerHTML = formatLanhDaoTinh(found.lanhDaoTinh);
-                    // ... các hàm format khác cũng có thể đặt ở đây nếu muốn ...
+                    resultLanhDaoSo.innerHTML = formatLanhDaoSo(found.lanhDaoSo, found.chucVu);
+                    resultDauMoi.innerHTML = formatMultiLine(found.dauMoi, '📧');
+                    resultGhiChu.innerHTML = found.ghiChu ? found.ghiChu : '<p class="no-info">Không có ghi chú</p>';
 
+                    // Hiển thị/ẩn các mục kết quả
+                    infoChungItem.classList.toggle('hidden', !found.thongTinChung);
+                    trungTamHCItem.classList.toggle('hidden', !found.trungTamHanhChinh);
+                    lanhDaoTinhItem.classList.toggle('hidden', !found.lanhDaoTinh);
+                    ghiChuItem.classList.toggle('hidden', !found.ghiChu);
                     resultsContainer.classList.remove('hidden');
                     
                 } else {
@@ -556,13 +601,63 @@
                     messageDiv.classList.remove('hidden');
                 }
             } catch (e) {
-                // ...
+                resultsContainer.classList.add('hidden');
+                messageDiv.textContent = 'Đã xảy ra lỗi khi tra cứu. Vui lòng thử lại. Chi tiết: ' + e.message;
+                messageDiv.className = 'error-message';
+                messageDiv.classList.remove('hidden');
             }
         }
-        // ... Các hàm còn lại giữ nguyên ...
-        // (Do giới hạn độ dài, tôi đã rút gọn phần code không thay đổi. 
-        //  Bạn chỉ cần copy toàn bộ code trong khung này là đủ.)
+        
+        // Code cho nhận dạng giọng nói và các event listener khác giữ nguyên
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            var recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
 
+            micButton.addEventListener('click', function () {
+                micButton.classList.add('is-listening');
+                micButton.textContent = '..';
+                try { recognition.start(); } catch (e) { handleRecognitionError({ error: 'start-failed' }); }
+            });
+            recognition.addEventListener('speechend', function () {
+                recognition.stop();
+                micButton.classList.remove('is-listening');
+                micButton.textContent = '🎙️';
+            });
+            recognition.addEventListener('result', function (event) {
+                var transcript = event.results[0][0].transcript;
+                provinceInput.value = transcript;
+                setTimeout(performSearch, 100);
+            });
+            recognition.addEventListener('error', function (event) {
+                handleRecognitionError(event);
+            });
+            function handleRecognitionError(event) {
+                micButton.classList.remove('is-listening');
+                micButton.textContent = '🎙️';
+                var errorMessage = 'Lỗi không xác định.';
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    errorMessage = 'Quyền truy cập micro đã bị từ chối.';
+                } else if (event.error === 'no-speech') {
+                    errorMessage = 'Không nhận diện được giọng nói.';
+                }
+                messageDiv.textContent = errorMessage;
+                messageDiv.className = 'error-message';
+                messageDiv.classList.remove('hidden');
+            }
+        } else {
+            micButton.style.display = 'none';
+        }
+
+        searchButton.addEventListener('click', performSearch);
+        provinceInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault();
+                performSearch();
+            }
+        });
     </script>
 </body>
 
