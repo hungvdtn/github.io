@@ -286,8 +286,21 @@
 
         .modal-body {
             line-height: 1.7;
-            white-space: pre-wrap;
         }
+
+        /* CSS MỚI: Định dạng tiêu đề trong pop-up */
+        .modal-body h4 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .modal-body h4:first-child {
+            margin-top: 0;
+        }
+
 
         .view-details-btn {
             display: block;
@@ -366,7 +379,7 @@
     <div id="detailModal" class="modal-overlay">
         <div class="modal-content">
             <button id="modalCloseButton" class="modal-close">&times;</button>
-            <h3 class="modal-title">Thông tin chi tiết</h3>
+            <h3 id="modalTitle" class="modal-title">Thông tin chi tiết</h3>
             <div id="modalBody" class="modal-body">
                 <!-- Nội dung chi tiết sẽ được đưa vào đây bằng JavaScript -->
             </div>
@@ -395,9 +408,9 @@
 
         const detailModal = document.getElementById('detailModal');
         const modalCloseButton = document.getElementById('modalCloseButton');
+        const modalTitle = document.getElementById('modalTitle');
         const modalBody = document.getElementById('modalBody');
 
-        // --- DỮ LIỆU MỚI ĐƯỢC NHÚNG TRỰC TIẾP VÀO ĐÂY ---
         const provinceData = [
           {
             "tenTinh": "An Giang",
@@ -792,7 +805,7 @@
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
                 if (line === '') continue;
-                var phoneMatch = line.match(/(\d[\d\s\.\(\)]{8,}\d)/);
+                var phoneMatch = line.match(/(\d[\d\s\.\(\)\u202f]{8,}\d)/g); // Update regex to handle special spaces
                 var infoPart = line;
                 var phonePart = null;
                 if (phoneMatch) {
@@ -802,7 +815,7 @@
                 htmlResult += '<div class="contact-entry">';
                 htmlResult += '<p>' + finalIcon + ' ' + infoPart + '</p>';
                 if (phonePart) {
-                    var telLink = phonePart.replace(/[\s\.\(\)]/g, '');
+                    var telLink = phonePart.replace(/[\s\.\(\)\u202f]/g, '');
                     htmlResult += '<p>📞 SĐT: <a href="tel:' + telLink + '">' + phonePart + '</a></p>';
                 }
                 htmlResult += '</div>';
@@ -823,7 +836,7 @@
                 var name = parts[0] ? parts[0].trim() : '';
                 var title = parts[1] ? parts[1].trim() : '';
                 if (name && title) {
-                    htmlResult += '<div class="contact-entry"><p>👤 ' + name + ' - ' + title + '</p></div>';
+                    htmlResult += '<div class="contact-entry"><p>👤 ' + name + '</p><p><em>' + title + '</em></p></div>';
                 }
             }
             return htmlResult || '<p class="no-info">Chưa có thông tin</p>';
@@ -841,7 +854,7 @@
             if (name) htmlResult += '<p>👤 ' + name + '</p>';
             if (year) htmlResult += '<p>📅 Năm sinh: ' + year + '</p>';
             if (phone) {
-                var telLink = phone.replace(/[\s\.\(\)]/g, '');
+                var telLink = phone.replace(/[\s\.\(\)\u202f]/g, '');
                 htmlResult += '<p>📞 SĐT: <a href="tel:' + telLink + '">' + phone + '</a></p>';
             }
             if (chucvu) htmlResult += '<p>💼 Chức vụ: ' + chucvu + '</p>';
@@ -849,8 +862,51 @@
             return htmlResult;
         }
 
-        function openModal(content) {
-            modalBody.textContent = content;
+        /**
+         * NÂNG CẤP: Hàm này giờ đây xây dựng toàn bộ nội dung cho pop-up
+         * từ đối tượng province đầy đủ.
+         * @param {object} province - Đối tượng tỉnh/thành phố chứa tất cả thông tin.
+         */
+        function openModal(province) {
+            // Đặt tiêu đề cho pop-up
+            let tenHienThi = province.tenTinh;
+            if (tenHienThi.toLowerCase().indexOf('thành phố') === -1) {
+                tenHienThi = 'Tỉnh ' + tenHienThi;
+            }
+            modalTitle.textContent = `Thông tin chi tiết: ${tenHienThi}`;
+
+            // Xây dựng nội dung HTML cho pop-up
+            let modalHtml = '';
+
+            // 1. Thông tin chung
+            const cleanedThongTinChung = province.thongTinChung.replace(/\(Xem chi tiết\)/gi, '').trim();
+            modalHtml += `<h4>📝 Thông tin chung</h4>`;
+            modalHtml += `<div class="contact-entry">${cleanedThongTinChung.replace(/\n/g, '<br>')}</div>`;
+
+            // 2. Trung tâm hành chính
+            modalHtml += `<h4>📍 Trung tâm hành chính mới</h4>`;
+            modalHtml += `<div class="contact-entry">${province.trungTamHanhChinh || '<span class="no-info">Chưa có thông tin</span>'}</div>`;
+
+            // 3. Lãnh đạo Tỉnh/Thành phố
+            modalHtml += `<h4>👤 Lãnh đạo Tỉnh/Thành phố</h4>`;
+            modalHtml += formatLanhDaoTinh(province.lanhDaoTinh);
+
+            // 4. Lãnh đạo Sở Nội vụ
+            modalHtml += `<h4>🏢 Lãnh đạo Sở Nội vụ</h4>`;
+            modalHtml += formatLanhDaoSo(province.lanhDaoSo, province.chucVu);
+            
+            // 5. Đầu mối liên hệ Sở
+            modalHtml += `<h4>📞 Đầu mối liên hệ Sở</h4>`;
+            modalHtml += formatMultiLine(province.dauMoi, '📧');
+
+            // 6. Ghi chú
+            modalHtml += `<h4>ℹ️ Ghi chú</h4>`;
+            modalHtml += `<div class="contact-entry">${province.ghiChu || '<span class="no-info">Không có ghi chú</span>'}</div>`;
+            
+            // Đưa nội dung đã xây dựng vào body của pop-up
+            modalBody.innerHTML = modalHtml;
+            
+            // Hiển thị pop-up
             detailModal.classList.add('active');
         }
 
@@ -914,7 +970,8 @@
                             const detailButton = document.createElement('button');
                             detailButton.className = 'view-details-btn';
                             detailButton.textContent = 'Xem chi tiết';
-                            detailButton.onclick = () => openModal(found.thongTinChung);
+                            // THAY ĐỔI: Gọi openModal với toàn bộ đối tượng 'found'
+                            detailButton.onclick = () => openModal(found);
                             resultThongTinChung.appendChild(detailButton);
                         }
                     } else {
