@@ -432,8 +432,9 @@
         const analytics = getAnalytics(app);
         
         // === DỮ LIỆU CHI TIẾT CÁC TỈNH (CẬP NHẬT TỪ FILE EXCEL) ===
+        // *** ĐÃ SỬA LỖI: CÁC KEY ĐÃ CÓ DẤU CÁCH ĐỂ KHỚP VỚI DỮ LIỆU CHUẨN HÓA ***
         const provinceDetails = {
-            'angiang': `
+            'an giang': `
                 <div class="modal-summary">
                     <p><strong>Tổng số ĐVHC cấp xã:</strong> 102 (gồm 85 xã, 14 phường và 3 đặc khu).</p>
                     <p><strong>Giữ nguyên không sắp xếp (06 xã):</strong> Mỹ Hòa Hưng, Bình Giang, Bình Sơn, Hòn Nghệ, Sơn Hải và Tiên Hải.</p>
@@ -544,7 +545,7 @@
                     </tbody>
                 </table>
             `,
-            'bacninh': `
+            'bac ninh': `
                 <div class="modal-summary">
                     <p><strong>Tổng số ĐVHC cấp xã:</strong> 99 (gồm 66 xã, 33 phường).</p>
                     <p><strong>Giữ nguyên không sắp xếp (01 xã):</strong> Tuấn Đạo.</p>
@@ -659,7 +660,7 @@
                     </tbody>
                 </table>
             `,
-            'camau': `
+            'ca mau': `
                 <div class="modal-summary">
                     <p><strong>Tổng số ĐVHC cấp xã:</strong> 64 (gồm 55 xã, 09 phường).</p>
                     <p><strong>Giữ nguyên không sắp xếp (01 xã):</strong> Hồ Thị Kỷ.</p>
@@ -757,6 +758,7 @@
 
         function normalizeText(str) {
             if (!str) return '';
+            // Chuẩn hóa, bỏ dấu, chuyển thành chữ thường và loại bỏ các tiền tố
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().replace(/tinh |thanh pho |tp /g, "").trim();
         }
 
@@ -836,7 +838,7 @@
                 var line = lines[i].trim();
                 // Bỏ qua dòng "Xem chi tiết" để nó không hiển thị dưới dạng văn bản thường
                 if (line.toLowerCase().includes('xem chi tiết')) {
-                    continue; // Bỏ qua dòng này và đi đến dòng tiếp theo
+                    continue; 
                 }
                 
                 if (line.startsWith('(') && line.endsWith(')')) {
@@ -873,7 +875,7 @@
         // Sử dụng event delegation để bắt sự kiện click trên link "Xem chi tiết"
         resultsContainer.addEventListener('click', function(event) {
             if (event.target.classList.contains('details-link')) {
-                event.preventDefault(); // Ngăn trình duyệt nhảy lên đầu trang
+                event.preventDefault(); 
                 const provinceKey = event.target.dataset.province;
                 const provinceName = resultTenTinh.textContent;
                 openModal(provinceKey, provinceName);
@@ -910,8 +912,9 @@
                     
                     // Xử lý mục "Thông tin chung" và thêm link "Xem chi tiết" nếu có
                     let thongTinChungHTML = formatThongTinChung(found.thongTinChung);
+                    // *** ĐÃ SỬA LỖI: Kiểm tra sự tồn tại của key chi tiết để quyết định có hiển thị link không
                     if (provinceDetails[found.normalizedKey]) {
-                        thongTinChungHTML += `<a href="#" class="details-link" data-province="${found.normalizedKey}">🔗 Xem chi tiết đơn vị hành chính...</a>`;
+                        thongTinChungHTML += `<br><a href="#" class="details-link" data-province="${found.normalizedKey}">🔗 Xem chi tiết đơn vị hành chính...</a>`;
                     }
                     resultThongTinChung.innerHTML = thongTinChungHTML;
 
